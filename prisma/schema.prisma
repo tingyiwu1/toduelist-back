@@ -8,7 +8,7 @@ datasource db {
 }
 
 model User {
-    id     String         @id @default(uuid())
+    id     String      @id @default(uuid())
     email  String      @unique
     name   String
     goals  Goal[]
@@ -16,45 +16,46 @@ model User {
 }
 
 model Goal {
-    id          String              @id @default(uuid())
+    id          String          @id @default(uuid())
     description String
-    completed   Boolean          @default(false)
-    user        User             @relation(fields: [userId], references: [id])
+    completed   Boolean         @default(false)
+    user        User            @relation(fields: [userId], references: [id], onDelete: Cascade)
     userId      String
-    groups      UserGroupGoals[]
+    groups      UserGroupGoal[]
     commits     Commit[]
 }
 
 model Commit {
-    id          String      @id @default(uuid())
+    id          String   @id @default(uuid())
     createdAt   DateTime @default(now())
     description String?
     hours       Float?
-    goal        Goal     @relation(fields: [goalId], references: [id])
+    goal        Goal     @relation(fields: [goalId], references: [id], onDelete: Cascade)
     goalId      String
 }
 
 model Group {
-    id    String         @id @default(uuid())
-    name  String
-    users UserGroup[]
+    id       String      @id @default(uuid())
+    name     String
+    timeZone String
+    users    UserGroup[]
 }
 
 model UserGroup {
-    user    User             @relation(fields: [userId], references: [id])
+    user    User            @relation(fields: [userId], references: [id], onDelete: Cascade)
     userId  String
-    group   Group            @relation(fields: [groupId], references: [id])
+    group   Group           @relation(fields: [groupId], references: [id], onDelete: Cascade)
     groupId String
-    goals   UserGroupGoals[]
+    goals   UserGroupGoal[]
 
     @@id([userId, groupId])
 }
 
-model UserGroupGoals {
-    userGroup UserGroup @relation(fields: [userId, groupId], references: [userId, groupId])
+model UserGroupGoal {
+    userGroup UserGroup @relation(fields: [userId, groupId], references: [userId, groupId], onDelete: Cascade)
     userId    String
     groupId   String
-    goal      Goal      @relation(fields: [goalId], references: [id])
+    goal      Goal      @relation(fields: [goalId], references: [id], onDelete: Cascade)
     goalId    String
 
     @@id([groupId, goalId])

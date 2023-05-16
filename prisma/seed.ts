@@ -2,90 +2,6 @@ import { PrismaClient, Prisma, User } from '@prisma/client'
 
 const prisma = new PrismaClient()
 
-const userData: Prisma.UserCreateInput[] = [
-    {
-        name: 'Alice',
-        email: 'alice@tdl.com',
-        goals: {
-            create: [
-                {
-                    description: 'hit the gym',
-                    commits: {
-                        create: [
-                            {
-                                hours: 3
-                            }
-                        ]
-                    }
-                },
-                {
-                    description: 'read a book',
-                    commits: {
-                        create: [
-                            {
-                                hours: 4
-                            }
-                        ]
-                    }
-                }
-            ]
-        }
-    },
-    {
-        name: 'Bob',
-        email: 'bob@tdl.com',
-        goals: {
-            create: [
-                {
-                    description: 'buy eggs',
-                    commits: { create: [{ hours: 1 }] }
-                },
-                {
-                    description: 'meet carol',
-                }
-            ]
-        }
-    },
-    {
-        name: 'Carol',
-        email: 'carol@tdl.com',
-        goals: {
-            create: [
-                {
-                    description: 'organize office',
-                    commits: { create: [{ hours: 5 }] }
-                },
-                {
-                    description: 'pay bils',
-                    commits: { create: [{ hours: 2 }, { hours: 3 }] }
-                },
-                {
-                    description: 'meet bob',
-                }
-            ]
-        }
-    }
-]
-
-function genGroupData(name: string, users: User[]): Prisma.GroupCreateInput {
-    const groupData: Prisma.GroupCreateInput = {
-        name: name,
-        users: {
-            create: users.map((user) => {
-                return {
-                    user: {
-                        connect: {
-                            id: user.id
-                        }
-                    }
-                }
-            })
-        }
-    }
-    return groupData
-}
-
-
 async function main() {
     console.log(`Start seeding ...`)
     const alice = await prisma.user.create({
@@ -169,6 +85,7 @@ async function main() {
     const alphabet = await prisma.group.create({
         data: {
             name: 'alphabet',
+            timeZone: 'America/Los_Angeles',
             users: {
                 create: [
                     {
@@ -186,7 +103,7 @@ async function main() {
 
     for (const ug of alphabet.users) {
         for (const g of ug.user.goals) {
-            const ugg = await prisma.userGroupGoals.create({
+            const ugg = await prisma.userGroupGoal.create({
                 data: {
                     userId: ug.userId,
                     groupId: alphabet.id,

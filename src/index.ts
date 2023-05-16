@@ -2,6 +2,7 @@ import { Prisma, PrismaClient } from '@prisma/client'
 import express from 'express'
 require('express-async-errors')
 import goals from './routes/goals'
+import groups from './routes/groups'
 
 export const prisma = new PrismaClient()
 const app = express()
@@ -14,6 +15,8 @@ app.use(async (req, res, next) => {
 })
 
 app.use('/goals', goals)
+app.use('/groups', groups)
+
 
 // app.post(`/signup`, async (req, res) => {
 //   const { name, email, posts } = req.body
