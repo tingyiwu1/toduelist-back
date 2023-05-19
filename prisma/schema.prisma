@@ -28,8 +28,8 @@ model Goal {
 model Commit {
     id          String   @id @default(uuid())
     createdAt   DateTime @default(now())
-    description String?
-    hours       Float?
+    description String   @default("")
+    hours       Float    @default(0)
     goal        Goal     @relation(fields: [goalId], references: [id], onDelete: Cascade)
     goalId      String
 }
