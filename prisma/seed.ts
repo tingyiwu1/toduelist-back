@@ -1,5 +1,6 @@
 import { PrismaClient, User, Group, UserGroup, Goal } from '@prisma/client'
 import nameBank from './nameBank.json'
+import groupBank from './groupBank.json'
 import goalBank from './goalBank.json'
 import commitBank from './commitBank.json'
 import { randString } from '../src/util'
@@ -47,14 +48,15 @@ async function createUsers(n: number, numGoalsMin: number, numGoalsMax: number, 
 }
 
 async function createGroups(n: number, users: User[], minSize: number, maxSize: number) {
-    const groupSizes = Array(n).fill(0).map(() => Math.floor(Math.random() * (maxSize - minSize + 1)) + minSize)
+    const shuffled = groupBank.sort(() => 0.5 - Math.random())
+    const groupSpecs = Array(n).fill(0).map((_, i) => [shuffled[i], Math.floor(Math.random() * (maxSize - minSize + 1)) + minSize] as const)
     const groups = await Promise.all(
-        groupSizes.map(async (size) => {
+        groupSpecs.map(async ([name, size]) => {
             const shuffled = users.sort(() => 0.5 - Math.random())
             const selected = shuffled.slice(0, size)
             const group = await prisma.group.create({
                 data: {
-                    name: `${selected.map((user) => user.name.charAt(0)).join('')}`,
+                    name: name,
                     joinCode: randString(8),
                     timeZone: 'America/Los_Angeles',
                     users: {
