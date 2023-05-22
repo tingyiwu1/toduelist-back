@@ -1,7 +1,8 @@
-import { PrismaClient, Prisma, User, Group, UserGroup, Goal } from '@prisma/client'
+import { PrismaClient, User, Group, UserGroup, Goal } from '@prisma/client'
 import nameBank from './nameBank.json'
 import goalBank from './goalBank.json'
 import commitBank from './commitBank.json'
+import { randString } from '../src/util'
 
 const prisma = new PrismaClient()
 
@@ -53,6 +54,7 @@ async function createGroups(n: number, users: User[], minSize: number, maxSize: 
             const group = await prisma.group.create({
                 data: {
                     name: `${selected.map((user) => user.name.charAt(0)).join('')}`,
+                    joinCode: randString(8),
                     timeZone: 'America/Los_Angeles',
                     users: {
                         create: selected.map((user) => ({ user: { connect: { id: user.id } } }))

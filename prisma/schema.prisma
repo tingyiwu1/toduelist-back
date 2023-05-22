@@ -8,11 +8,15 @@ datasource db {
 }
 
 model User {
-    id     String      @id @default(uuid())
-    email  String      @unique
-    name   String
-    goals  Goal[]
-    groups UserGroup[]
+    id              String      @id @default(uuid())
+    email           String      @unique
+    name            String
+    real            Boolean     @default(false)
+    impersonating   User?       @relation("Impersonating", fields: [impersonatingId], references: [id])
+    impersonatingId String?
+    goals           Goal[]
+    groups          UserGroup[]
+    impersonators   User[]      @relation("Impersonating")
 }
 
 model Goal {
@@ -36,6 +40,7 @@ model Commit {
 
 model Group {
     id       String      @id @default(uuid())
+    joinCode String      @unique
     name     String
     timeZone String
     users    UserGroup[]
