@@ -4,19 +4,6 @@ import { prisma } from "../index";
 
 const router = express.Router();
 
-router.get("/allGoals", async (req, res) => {
-    const goals = await prisma.goal.findMany({
-        where: {
-            userId: res.locals.user.id,
-        },
-        include: { commits: true, groups: true },
-    });
-    const result = goals.map((goal) => {
-        return { ...goal, groups: goal.groups.map((group) => group.groupId) };
-    });
-    res.json(result);
-});
-
 router.get("/goalQuery", async (req, res) => {
     const goals = await prisma.goal.findMany({
         where: {
