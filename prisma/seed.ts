@@ -6,6 +6,7 @@ import { randString } from '../src/util'
 
 const prisma = new PrismaClient()
 
+// blame copilot for pyramid it works and im not rewriting it
 async function createUsers(n: number, numGoalsMin: number, numGoalsMax: number, numCommitsMin: number, numCommitsMax: number, completeChance: number) {
     const shuffled = nameBank.sort(() => 0.5 - Math.random())
     const selected = shuffled.slice(0, n)
