@@ -27,7 +27,7 @@ async function createUsers(n: number, numGoalsMin: number, numGoalsMax: number, 
                                             ...Array(Math.floor(Math.random() * (numCommitsMax - numCommitsMin + 1)) + numCommitsMin).fill(0).map(() => {
                                                 return {
                                                     description: Math.random() < 0.5 ? undefined : commitBank[Math.floor(Math.random() * commitBank.length)],
-                                                    hours: Math.round((Math.random() * 96 / ((numCommitsMin + numCommitsMax) * (numGoalsMin + numGoalsMax))) * 10) / 10
+                                                    hours: Math.ceil((Math.random() * 200 / ((numCommitsMin + numCommitsMax) * (numGoalsMin + numGoalsMax))) * 10) / 10
                                                 }
                                             }
                                             )
@@ -105,8 +105,8 @@ async function addGoals(
 async function main() {
     console.log(`Start seeding ...`)
 
-    const users = await createUsers(26, 5, 20, 0, 5, 0.5)
-    const groups = await createGroups(15, users, 2, 10)
+    const users = await createUsers(26, 10, 30, 0, 8, 0.5)
+    const groups = await createGroups(20, users, 2, 15)
     await addGoals(groups, 0.5, 0.9)
 
     console.log(`Seeding finished.`)
